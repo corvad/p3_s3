@@ -1,4 +1,4 @@
-module myapp
+module p3_s3
 
 go 1.23.4
 

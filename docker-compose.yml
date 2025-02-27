@@ -7,4 +7,3 @@ services:
       - type: bind
         source: ./pb_data
         target: /pb/pb_data
-
