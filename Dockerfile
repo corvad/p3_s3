@@ -7,11 +7,12 @@ COPY go.mod go.sum ./
 RUN go mod download
 
 COPY . .
-RUN --mount=type=cache,target=~/.cache \
+RUN --mount=type=cache,target=/root/.cache/go-build \
 --mount=type=cache,target=$GOPATH/pkg/mod \
     go build -v -o /pb/app
 
 EXPOSE 8080
 WORKDIR /pb
 # start PocketBase
-CMD ["app", "serve", "--http=0.0.0.0:8080"]
+
+CMD ["/pb/app", "serve", "--http=0.0.0.0:8080","--dev"]

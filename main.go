@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"time"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
@@ -41,12 +42,19 @@ func main() {
 			presignResult, err := e.App.Store().Get("s3").(*s3.PresignClient).PresignGetObject(context.TODO(), &s3.GetObjectInput{
 				Bucket: aws.String(e.App.Settings().S3.Bucket),
 				Key:    aws.String(e.ServedPath),
+			}, func(opts *s3.PresignOptions) {
+				opts.Expires = time.Duration(5 * int64(time.Second))
 			})
-			if err != nil {
-				e.App.Logger().Error("Error Signing S3 URL")
-			}
-			e.App.Logger().Info("Generated Direct Pre-Signed S3 URL")
-			return e.Redirect(302, presignResult.URL)
+			if err == nil {
+				e.App.Logger().Info("Generated Direct Pre-Signed S3 URL")
+				e.App.Logger().Info(e.ServedPath)
+				return e.Redirect(302, presignResult.URL)
+			}	
+			
+			e.App.Logger().Info(string(err.Error()))
+			e.App.Logger().Error("Error Signing S3 URL")
+			e.App.Logger().Info(e.ServedPath)
+			return e.Next()
 		}
 		return e.Next()
 	})
