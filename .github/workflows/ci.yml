@@ -5,7 +5,7 @@ on:
 
 jobs:
   docker:
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-24.04-16core
     steps:
 
       - name: Login to GitHub Container Registry
