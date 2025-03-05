@@ -1,6 +1,6 @@
 version: 2
 
-project_name: pocketbase
+project_name: p3_s3
 
 dist: .builds
 
@@ -10,10 +10,8 @@ before:
 
 builds:
   - id: build_noncgo
-    main: ./examples/base
-    binary: pocketbase
-    ldflags:
-      - -s -w -X github.com/pocketbase/pocketbase.Version={{ .Version }}
+    main: .
+    binary: p3_s3
     env:
       - CGO_ENABLED=0
     goos:
@@ -45,23 +43,5 @@ builds:
 release:
   draft: true
 
-archives:
-  - id: archive_noncgo
-    builds: [build_noncgo]
-    format: zip
-    files:
-      - LICENSE.md
-      - CHANGELOG.md
-
 checksum:
   name_template: 'checksums.txt'
-
-snapshot:
-  version_template: '{{ incpatch .Version }}-next'
-
-changelog:
-  sort: asc
-  filters:
-    exclude:
-      - '^examples:'
-      - '^ui:'
