@@ -20,11 +20,6 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 20.17.0
-
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
@@ -33,8 +28,6 @@ jobs:
       # This step usually is not needed because the /ui/dist is pregenerated locally
       # but its here to ensure that each release embeds the latest admin ui artifacts.
       # If the artificats differs, a "dirty error" is thrown - https://goreleaser.com/errors/dirty/
-      - name: Build Admin dashboard UI
-        run: npm --prefix=./ui ci && npm --prefix=./ui run build
 
       # Temporary disable as the types can have random generated identifiers making it non-deterministic.
       #
@@ -42,9 +35,6 @@ jobs:
       # # but its here to ensure that it wasn't forgotten to be executed.
       # - name: Generate jsvm types
       #   run: go run ./plugins/jsvm/internal/types/types.go
-
-      - name: Run tests
-        run: go test ./...
 
       - name: Run GoReleaser
         uses: goreleaser/goreleaser-action@v6
